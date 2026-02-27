@@ -26,6 +26,7 @@ import { ObsidianRestApiService } from "../services/obsidianRestAPI/index.js";
 import { VaultCacheService } from "../services/obsidianRestAPI/vaultCache/index.js";
 // Import registration functions for specific resources and tools.
 import { registerObsidianDeleteNoteTool } from "./tools/obsidianDeleteNoteTool/index.js";
+import { registerObsidianGetVaultIndexTool } from "./tools/obsidianGetVaultIndexTool/index.js";
 import { registerObsidianGlobalSearchTool } from "./tools/obsidianGlobalSearchTool/index.js";
 import { registerObsidianListNotesTool } from "./tools/obsidianListNotesTool/index.js";
 import { registerObsidianReadNoteTool } from "./tools/obsidianReadNoteTool/index.js";
@@ -103,6 +104,7 @@ async function createMcpServerInstance(
     );
     // Register all tools, passing the vaultCacheService which may be undefined
     await registerObsidianListNotesTool(server, obsidianService);
+    await registerObsidianGetVaultIndexTool(server, obsidianService);
     await registerObsidianReadNoteTool(server, obsidianService);
     await registerObsidianDeleteNoteTool(
       server,
