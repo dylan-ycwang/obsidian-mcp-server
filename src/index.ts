@@ -178,65 +178,7 @@ const start = async () => {
     obsidianService = new ObsidianRestApiService(); // Instantiate Obsidian Service
 
     // --- Perform Initial Obsidian API Status Check ---
-    try {
-      logger.info(
-        "Performing initial Obsidian API status check with retries...",
-        startupContext,
-      );
-
-      const status = await retryWithDelay(
-        async () => {
-          if (!obsidianService) {
-            // This case should not happen in practice, but it satisfies the type checker.
-            throw new Error("Obsidian service not initialized.");
-          }
-          const checkStatusContext = {
-            ...startupContext,
-            operation: "checkStatusAttempt",
-          };
-          const currentStatus =
-            await obsidianService.checkStatus(checkStatusContext);
-          if (
-            currentStatus?.service !== "Obsidian Local REST API" ||
-            !currentStatus?.authenticated
-          ) {
-            // Throw an error to trigger a retry
-            throw new Error(
-              `Obsidian API status check failed or indicates authentication issue. Status: ${JSON.stringify(
-                currentStatus,
-              )}`,
-            );
-          }
-          return currentStatus;
-        },
-        {
-          operationName: "initialObsidianApiCheck",
-          context: startupContext,
-          maxRetries: 5, // Retry up to 5 times
-          delayMs: 3000, // Wait 3 seconds between retries
-        },
-      );
-
-      logger.info("Obsidian API status check successful.", {
-        ...startupContext,
-        obsidianVersion: status.versions.obsidian,
-        pluginVersion: status.versions.self,
-      });
-    } catch (statusError) {
-      logger.error(
-        "Critical error during initial Obsidian API status check after multiple retries. Check OBSIDIAN_BASE_URL, OBSIDIAN_API_KEY, and plugin status.",
-        {
-          ...startupContext,
-          error:
-            statusError instanceof Error
-              ? statusError.message
-              : String(statusError),
-          stack: statusError instanceof Error ? statusError.stack : undefined,
-        },
-      );
-      // Re-throw the final error to be caught by the main startup catch block, which will exit the process.
-      throw statusError;
-    }
+    // --- Obsidian API Status Check Skipped (connect first) ---
     // --- End Status Check ---
 
     if (config.obsidianEnableCache) {

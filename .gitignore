@@ -169,4 +169,4 @@ mcp-config.json
 # Generated Documentation
 docs/api/
 
-logs/
+logs/.claude/
